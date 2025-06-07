@@ -36,10 +36,10 @@
 #define DRVSPEC_LEN    400
 
 // function prototype
-RETSIGTYPE catch_segv( int sig );
+void catch_segv( int sig );
 
 // SEGV signal handler
-RETSIGTYPE
+void
 catch_segv( int PL_UNUSED( sig ) )
 {
     fprintf( stderr, "libltdl error: %s\n", lt_dlerror() );

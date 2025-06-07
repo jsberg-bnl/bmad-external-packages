@@ -250,9 +250,6 @@ set(NEED_SYS_TYPE_H ON)
 # system.
 # AC_CHECK_TYPE(caddr_t, char *)
 
-# Test signal handler return type (mimics AC_TYPE_SIGNAL)
-include(TestSignalType)
-
 include(CheckFunctionExists)
 check_function_exists(popen HAVE_POPEN)
 check_function_exists(usleep PL_HAVE_USLEEP)
