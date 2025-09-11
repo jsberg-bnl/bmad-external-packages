@@ -34,7 +34,7 @@ func_configure_make_install () {
     export DRVOPTS=${OPTS}
     export NOOPT=${OPTS}
     export LOADOPTS=${LDFLAGS}
-    export BUILD_DEPRECATED="Yes"
+    ## export BUILD_DEPRECATED="Yes"
 
     [ "${FC}" == "gfortran" ] && export TIMER="INT_ETIME" || export TIMER="EXT_ETIME"
 
@@ -112,7 +112,6 @@ func_configure_make_install () {
 		-DCMAKE_INSTALL_PREFIX=${OUTPUT_DIR} \
 		-DBUILD_SHARED_LIBS=ON \
 		-DBUILD_TESTING=${TEST_STATUS} \
-		-DBUILD_DEPRECATED=YES \
 		-DCBLAS=OFF \
 		-DLAPACKE=ON \
 		-DLAPACKE_WITH_TMG=ON \
