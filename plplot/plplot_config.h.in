@@ -266,9 +266,6 @@
 // SYMBOL_OBLIQUE font accessible from freetype
 #define PL_FREETYPE_SYMBOL_OBLIQUE         "@PL_FREETYPE_SYMBOL_OBLIQUE@"
 
-// Define as the return type of signal handlers (`int' or `void').
-#define RETSIGTYPE                         @RETSIGTYPE@
-
 // Location of Source tree
 #define SOURCE_DIR                         "@SOURCE_DIR@"
 
