@@ -31,26 +31,21 @@ func_configure_make_install () {
         [ "${BUILD_TYPE}" == "debug" ] && CMAKE_BUILD_TYPE=RelWithDebInfo
         [ "${BUILD_TYPE}" == "production" ] && CMAKE_BUILD_TYPE=Release
 
-	[ -n "${DIST_BUILD}" ] && ENABLE_RPATH=ON || ENABLE_RPATH=OFF
 	${CMAKE_BINARY} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} \
                         -DCMAKE_INSTALL_PREFIX=${OUTPUT_DIR} \
 			-DBUILD_SHARED_LIBS=$SHARED \
 			-DBUILD_STATIC_LIBS=$STATIC \
-			-DUSE_RPATH=${ENABLE_RPATH} \
                         -Wno-dev \
                         -DHDF5_INSTALL_CMAKE_DIR=lib/cmake/hdf5 \
-                        -DHDF5_BUILD_HL_LIB=ON \
                         -DHDF5_BUILD_FORTRAN=ON \
-			-DHDF5_BUILD_GENERATORS=OFF \
-			-DHDF5_ENABLE_SZIP_SUPPORT=OFF \
+			-DBUILD_TESTING=OFF \
+			-DHDF5_BUILD_EXAMPLES=OFF \
 			..
 
 	${CMAKE_BINARY} --build .
 	${CMAKE_BINARY} --install .
         export RETVAL=$?
     fi
-
-    if [ ! -L ${OUTPUT_DIR}/modules/hdf5.mod ] ; then cd ${OUTPUT_DIR}/modules/ ; ln -s ../include/h5*.mod . ; ln -s ../include/hdf5.mod . ; fi
 
 }
 

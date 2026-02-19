@@ -4,7 +4,7 @@
  *                                                                           *
  * This file is part of HDF5.  The full HDF5 copyright notice, including     *
  * terms governing use, modification, and redistribution, is contained in    *
- * the COPYING file, which can be found at the root of the source code       *
+ * the LICENSE file, which can be found at the root of the source code       *
  * distribution tree, or in https://www.hdfgroup.org/licenses.               *
  * If you do not have access to either file, you may request a copy from     *
  * help@hdfgroup.org.                                                        *
@@ -293,7 +293,7 @@ public class TestH5Fbasic {
         catch (Throwable err) {
             fail("H5.H5Fget_mdc_size: " + err);
         }
-        assertTrue("H5.H5Fget_mdc_size #:" + nentries, nentries == 4);
+        assertTrue("H5.H5Fget_mdc_size #:" + nentries, nentries == 2);
     }
 
     // TODO: test more cases of different cache sizes.

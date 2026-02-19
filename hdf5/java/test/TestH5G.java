@@ -4,7 +4,7 @@
  *                                                                           *
  * This file is part of HDF5.  The full HDF5 copyright notice, including     *
  * terms governing use, modification, and redistribution, is contained in    *
- * the COPYING file, which can be found at the root of the source code       *
+ * the LICENSE file, which can be found at the root of the source code       *
  * distribution tree, or in https://www.hdfgroup.org/licenses.               *
  * If you do not have access to either file, you may request a copy from     *
  * help@hdfgroup.org.                                                        *
@@ -241,6 +241,12 @@ public class TestH5G {
                 fail("TestH5G.testH5Gget_create_plist: H5.H5Gget_create_plist: " + err);
             }
             assertTrue("TestH5G.testH5Gget_create_plist: ", pid > 0);
+
+            try {
+                H5.H5Pclose(pid);
+            }
+            catch (Exception ex) {
+            }
 
             try {
                 H5.H5Gclose(gid);
