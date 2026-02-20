@@ -31,12 +31,13 @@ func_configure_make_install () {
         [ "${BUILD_TYPE}" == "debug" ] && CMAKE_BUILD_TYPE=RelWithDebInfo
         [ "${BUILD_TYPE}" == "production" ] && CMAKE_BUILD_TYPE=Release
 
-	[ -n "${DIST_BUILD}" ] && ENABLE_RPATH=ON || ENABLE_RPATH=OFF
+	HDF5_SYSROOT=
+	[ ${DIST_OS} == "Darwin" ] && HDF5_SYSROOT=-DCMAKE_OSX_SYSROOT=$(xcrun --show-sdk-path)
 	${CMAKE_BINARY} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} \
                         -DCMAKE_INSTALL_PREFIX=${OUTPUT_DIR} \
 			-DBUILD_SHARED_LIBS=$SHARED \
 			-DBUILD_STATIC_LIBS=$STATIC \
-			-DUSE_RPATH=${ENABLE_RPATH} \
+			${HDF5_SYSROOT} \
                         -Wno-dev \
                         -DHDF5_INSTALL_CMAKE_DIR=lib/cmake/hdf5 \
                         -DHDF5_BUILD_HL_LIB=ON \
