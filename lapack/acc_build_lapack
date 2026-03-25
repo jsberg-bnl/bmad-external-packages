@@ -108,6 +108,8 @@ func_configure_make_install () {
 		TEST_STATUS=OFF
 	    fi
 
+	    LAPACK_DEPLOY_TARGET=
+	    [ "$(uname)" == "Darwin" ] && LAPACK_DEPLOY_TARGET="-DCMAKE_OSX_DEPLOYMENT_TARGET=$(sw_vers -productVersion | grep -oE '^[0-9]+\.[0-9]+')"
 	    ${CMAKE_BINARY} \
 		-DCMAKE_INSTALL_PREFIX=${OUTPUT_DIR} \
 		-DBUILD_SHARED_LIBS=ON \
@@ -121,6 +123,7 @@ func_configure_make_install () {
 		-DCMAKE_Fortran_COMPILER=${FC} \
 		-DCMAKE_Fortran_COMPILER_WORKS=TRUE \
 		-DCMAKE_C_COMPILER_WORKS=TRUE \
+		${LAPACK_DEPLOY_TARGET} \
 		../
 
 	    ${CMAKE_BINARY} --build . -j ${ACC_SET_GMAKE_JOBS} --target install

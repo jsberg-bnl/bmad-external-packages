@@ -32,12 +32,15 @@ func_configure_make_install () {
         [ "${BUILD_TYPE}" == "production" ] && CMAKE_BUILD_TYPE=Release
 
 	HDF5_SYSROOT=
+	HDF5_DEPLOY_TARGET=
 	[ ${DIST_OS} == "Darwin" ] && HDF5_SYSROOT=-DCMAKE_OSX_SYSROOT=$(xcrun --show-sdk-path)
+	[ ${DIST_OS} == "Darwin" ] && HDF5_DEPLOY_TARGET=-DCMAKE_OSX_DEPLOYMENT_TARGET=$(sw_vers -productVersion | grep -oE '^[0-9]+\.[0-9]+')
 	${CMAKE_BINARY} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} \
                         -DCMAKE_INSTALL_PREFIX=${OUTPUT_DIR} \
 			-DBUILD_SHARED_LIBS=$SHARED \
 			-DBUILD_STATIC_LIBS=$STATIC \
 			${HDF5_SYSROOT} \
+			${HDF5_DEPLOY_TARGET} \
                         -Wno-dev \
                         -DHDF5_INSTALL_CMAKE_DIR=lib/cmake/hdf5 \
                         -DHDF5_BUILD_HL_LIB=ON \
