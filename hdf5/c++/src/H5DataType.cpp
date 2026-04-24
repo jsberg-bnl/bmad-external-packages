@@ -4,7 +4,7 @@
  *                                                                           *
  * This file is part of HDF5.  The full HDF5 copyright notice, including     *
  * terms governing use, modification, and redistribution, is contained in    *
- * the COPYING file, which can be found at the root of the source code       *
+ * the LICENSE file, which can be found at the root of the source code       *
  * distribution tree, or in https://www.hdfgroup.org/licenses.               *
  * If you do not have access to either file, you may request a copy from     *
  * help@hdfgroup.org.                                                        *
@@ -250,7 +250,7 @@ DataType::p_decode() const
     }
 
     // Call C function to decode the binary object description
-    hid_t encoded_dtype_id = H5Tdecode(encoded_buf);
+    hid_t encoded_dtype_id = H5Tdecode2(encoded_buf, buf_size);
 
     // If H5Tdecode fails, raise exception
     if (encoded_dtype_id < 0) {
@@ -526,7 +526,6 @@ DataType::find(const DataType &dest, H5T_cdata_t **pcdata) const
 ///                            values
 ///\param       background - IN: Optional background buffer
 ///\param       plist - IN: Property list - default to PropList::DEFAULT
-///\return      Pointer to a suitable conversion function
 ///\exception   H5::DataTypeIException
 //--------------------------------------------------------------------------
 void
@@ -924,7 +923,8 @@ DataType::close()
         // Free and reset buffer of encoded object description if it's been used
         if (encoded_buf != NULL) {
             delete[] encoded_buf;
-            buf_size = 0;
+            encoded_buf = NULL;
+            buf_size    = 0;
         }
     }
 }

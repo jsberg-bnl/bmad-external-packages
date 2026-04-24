@@ -4,7 +4,7 @@
  *                                                                           *
  * This file is part of HDF5.  The full HDF5 copyright notice, including     *
  * terms governing use, modification, and redistribution, is contained in    *
- * the COPYING file, which can be found at the root of the source code       *
+ * the LICENSE file, which can be found at the root of the source code       *
  * distribution tree, or in https://www.hdfgroup.org/licenses.               *
  * If you do not have access to either file, you may request a copy from     *
  * help@hdfgroup.org.                                                        *
@@ -1222,7 +1222,7 @@ test_mf_fs_alloc_free(hid_t fapl)
     sect_node = H5MF__sect_new(H5MF_FSPACE_SECT_SIMPLE, (haddr_t)TBLOCK_ADDR70, (hsize_t)TBLOCK_SIZE30);
 
     /* Add section A to free-space manager */
-    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node))
+    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node, NULL))
         FAIL_STACK_ERROR;
 
     memset(&state, 0, sizeof(H5FS_stat_t));
@@ -1300,7 +1300,7 @@ test_mf_fs_alloc_free(hid_t fapl)
     sect_node = H5MF__sect_new(H5MF_FSPACE_SECT_SIMPLE, (haddr_t)TBLOCK_ADDR70, (hsize_t)TBLOCK_SIZE30);
 
     /* Add section A to free-space manager */
-    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node))
+    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node, NULL))
         FAIL_STACK_ERROR;
 
     memset(&state, 0, sizeof(H5FS_stat_t));
@@ -1376,7 +1376,7 @@ test_mf_fs_alloc_free(hid_t fapl)
     sect_node = H5MF__sect_new(H5MF_FSPACE_SECT_SIMPLE, (haddr_t)TBLOCK_ADDR70, (hsize_t)TBLOCK_SIZE30);
 
     /* Add section A to free-space manager */
-    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node))
+    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node, NULL))
         FAIL_STACK_ERROR;
 
     memset(&state, 0, sizeof(H5FS_stat_t));
@@ -1552,7 +1552,7 @@ test_mf_fs_extend(hid_t fapl)
     sect_node1 = H5MF__sect_new(H5MF_FSPACE_SECT_SIMPLE, (haddr_t)TBLOCK_ADDR70, (hsize_t)TBLOCK_SIZE30);
 
     /* Add section A to free-space manager */
-    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node1))
+    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node1, NULL))
         FAIL_STACK_ERROR;
 
     memset(&state, 0, sizeof(H5FS_stat_t));
@@ -1581,7 +1581,7 @@ test_mf_fs_extend(hid_t fapl)
     sect_node2 = H5MF__sect_new(H5MF_FSPACE_SECT_SIMPLE, (haddr_t)TBLOCK_ADDR100, (hsize_t)TBLOCK_SIZE50);
 
     /* Add section B to free-space manager */
-    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node2))
+    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node2, NULL))
         FAIL_STACK_ERROR;
 
     state.tot_space += TBLOCK_SIZE50;
@@ -1662,7 +1662,7 @@ test_mf_fs_extend(hid_t fapl)
     sect_node1 = H5MF__sect_new(H5MF_FSPACE_SECT_SIMPLE, (haddr_t)TBLOCK_ADDR70, (hsize_t)TBLOCK_SIZE30);
 
     /* Add section A to free-space manager */
-    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node1))
+    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node1, NULL))
         FAIL_STACK_ERROR;
 
     memset(&state, 0, sizeof(H5FS_stat_t));
@@ -1691,7 +1691,7 @@ test_mf_fs_extend(hid_t fapl)
     sect_node2 = H5MF__sect_new(H5MF_FSPACE_SECT_SIMPLE, (haddr_t)TBLOCK_ADDR100, (hsize_t)TBLOCK_SIZE50);
 
     /* Add section B to free-space manager */
-    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node2))
+    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node2, NULL))
         FAIL_STACK_ERROR;
 
     state.tot_space += TBLOCK_SIZE50;
@@ -1767,7 +1767,7 @@ test_mf_fs_extend(hid_t fapl)
     sect_node1 = H5MF__sect_new(H5MF_FSPACE_SECT_SIMPLE, (haddr_t)TBLOCK_ADDR70, (hsize_t)TBLOCK_SIZE30);
 
     /* Add section A to free-space manager */
-    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node1))
+    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node1, NULL))
         FAIL_STACK_ERROR;
 
     memset(&state, 0, sizeof(H5FS_stat_t));
@@ -1796,7 +1796,7 @@ test_mf_fs_extend(hid_t fapl)
     sect_node2 = H5MF__sect_new(H5MF_FSPACE_SECT_SIMPLE, (haddr_t)TBLOCK_ADDR100, (hsize_t)TBLOCK_SIZE50);
 
     /* Add section B to free-space manager */
-    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node2))
+    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node2, NULL))
         FAIL_STACK_ERROR;
 
     state.tot_space += TBLOCK_SIZE50;
@@ -1873,7 +1873,7 @@ test_mf_fs_extend(hid_t fapl)
         H5MF__sect_new(H5MF_FSPACE_SECT_SIMPLE, (haddr_t)TBLOCK_ADDR70, (hsize_t)(TBLOCK_SIZE30 - 10));
 
     /* Add section A of size=20 to free-space */
-    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node1))
+    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node1, NULL))
         FAIL_STACK_ERROR;
 
     memset(&state, 0, sizeof(H5FS_stat_t));
@@ -1902,7 +1902,7 @@ test_mf_fs_extend(hid_t fapl)
     sect_node2 = H5MF__sect_new(H5MF_FSPACE_SECT_SIMPLE, (haddr_t)TBLOCK_ADDR100, (hsize_t)TBLOCK_SIZE50);
 
     /* Add section B to free-space manager */
-    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node2))
+    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node2, NULL))
         FAIL_STACK_ERROR;
 
     state.tot_space += TBLOCK_SIZE50;
@@ -2057,7 +2057,7 @@ test_mf_fs_absorb(const char *driver_name, hid_t fapl)
             H5MF__sect_new(H5MF_FSPACE_SECT_SIMPLE, (haddr_t)(ma_addr + ma_size), (hsize_t)TBLOCK_SIZE2048);
 
         /* Add a section to free-space that adjoins end of the aggregator */
-        if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node))
+        if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node, NULL))
             FAIL_STACK_ERROR;
 
         /* Verify that the section did absorb the aggregator */
@@ -2117,7 +2117,7 @@ test_mf_fs_absorb(const char *driver_name, hid_t fapl)
         sect_node = H5MF__sect_new(H5MF_FSPACE_SECT_SIMPLE, (haddr_t)addr, (hsize_t)TBLOCK_SIZE30);
 
         /* When adding, meta_aggr is absorbed onto the end of the section */
-        if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node))
+        if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node, NULL))
             FAIL_STACK_ERROR;
 
         /* Verify that the section did absorb the aggregator */
@@ -4183,7 +4183,7 @@ test_mf_align_fs(const char *driver_name, hid_t fapl, hid_t new_fapl)
     sect_node = H5MF__sect_new(H5MF_FSPACE_SECT_SIMPLE, (haddr_t)alignment, (hsize_t)TBLOCK_SIZE50);
 
     /* Add section A to free-space manager */
-    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node))
+    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node, NULL))
         FAIL_STACK_ERROR;
 
     memset(&state, 0, sizeof(H5FS_stat_t));
@@ -4247,7 +4247,7 @@ test_mf_align_fs(const char *driver_name, hid_t fapl, hid_t new_fapl)
     sect_node = H5MF__sect_new(H5MF_FSPACE_SECT_SIMPLE, (haddr_t)TBLOCK_ADDR70, (hsize_t)TBLOCK_SIZE8000);
 
     /* Add section A to free-space manager */
-    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node))
+    if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node, NULL))
         FAIL_STACK_ERROR;
 
     memset(&state, 0, sizeof(H5FS_stat_t));
@@ -4334,7 +4334,7 @@ test_mf_align_fs(const char *driver_name, hid_t fapl, hid_t new_fapl)
         sect_node = H5MF__sect_new(H5MF_FSPACE_SECT_SIMPLE, (haddr_t)TBLOCK_ADDR70, (hsize_t)TBLOCK_SIZE700);
 
         /* Add section A to free-space manager */
-        if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node))
+        if (H5MF__add_sect(f, H5FD_MEM_SUPER, f->shared->fs_man[H5FD_MEM_SUPER], sect_node, NULL))
             FAIL_STACK_ERROR;
 
         memset(&state, 0, sizeof(H5FS_stat_t));
@@ -9126,12 +9126,13 @@ error:
 int
 main(void)
 {
-    hid_t       fapl     = H5I_INVALID_HID; /* File access property list for data files */
-    hid_t       new_fapl = H5I_INVALID_HID; /* File access property list for alignment & aggr setting */
-    unsigned    nerrors  = 0;               /* Cumulative error count */
-    test_type_t curr_test;                  /* Current test being worked on */
-    const char *driver_name;                /* File Driver value from environment */
-    bool        api_ctx_pushed = false;     /* Whether API context pushed */
+    hid_t       fapl     = H5I_INVALID_HID;   /* File access property list for data files */
+    hid_t       new_fapl = H5I_INVALID_HID;   /* File access property list for alignment & aggr setting */
+    unsigned    nerrors  = 0;                 /* Cumulative error count */
+    test_type_t curr_test;                    /* Current test being worked on */
+    const char *driver_name;                  /* File Driver value from environment */
+    H5CX_node_t api_ctx        = {{0}, NULL}; /* API context node to push */
+    bool        api_ctx_pushed = false;       /* Whether API context pushed */
 
     /* Get the VFD to use */
     driver_name = h5_get_test_driver_name();
@@ -9140,8 +9141,12 @@ main(void)
 
     fapl = h5_fileaccess();
 
+    /* These tests assume fapl indicates to use the earliest file format */
+    if (H5Pset_libver_bounds(fapl, H5F_LIBVER_EARLIEST, H5F_LIBVER_LATEST) < 0)
+        TEST_ERROR;
+
     /* Push API context */
-    if (H5CX_push() < 0)
+    if (H5CX_push(&api_ctx) < 0)
         FAIL_STACK_ERROR;
     api_ctx_pushed = true;
 

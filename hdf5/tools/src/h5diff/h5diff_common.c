@@ -4,7 +4,7 @@
  *                                                                           *
  * This file is part of HDF5.  The full HDF5 copyright notice, including     *
  * terms governing use, modification, and redistribution, is contained in    *
- * the COPYING file, which can be found at the root of the source code       *
+ * the LICENSE file, which can be found at the root of the source code       *
  * distribution tree, or in https://www.hdfgroup.org/licenses.               *
  * If you do not have access to either file, you may request a copy from     *
  * help@hdfgroup.org.                                                        *
@@ -491,6 +491,7 @@ print_info(diff_opt_t *opts)
         printf("No common objects found. Files are not comparable.\n");
         if (!opts->mode_verbose)
             printf("Use -v for a list of objects.\n");
+        return;
     }
 
     if (opts->not_cmp == 1) {
@@ -503,6 +504,11 @@ print_info(diff_opt_t *opts)
             else
                 printf("Use -c for a list of objects.\n");
         }
+    }
+
+    if (opts->contents == 0 && !opts->mode_verbose) {
+        printf("Files do not have the same set of objects.\n");
+        printf("Use -v for a list of objects.\n");
     }
 }
 

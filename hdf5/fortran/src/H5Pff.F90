@@ -16,7 +16,7 @@
 !                                                                             *
 !   This file is part of HDF5.  The full HDF5 copyright notice, including     *
 !   terms governing use, modification, and redistribution, is contained in    *
-!   the COPYING file, which can be found at the root of the source code       *
+!   the LICENSE file, which can be found at the root of the source code       *
 !   distribution tree, or in https://www.hdfgroup.org/licenses.               *
 !   If you do not have access to either file, you may request a copy from     *
 !   help@hdfgroup.org.                                                        *
@@ -3470,17 +3470,17 @@ CONTAINS
     INTEGER, INTENT(IN) :: crt_order_flags
     INTEGER, INTENT(OUT) :: hdferr
     INTERFACE
-       INTEGER FUNCTION h5pset_link_creation_order_c(gcpl_id, crt_order_flags) &
-            BIND(C,NAME='h5pset_link_creation_order_c')
-         IMPORT :: HID_T
+       INTEGER FUNCTION h5pset_link_creation_order(gcpl_id, crt_order_flags) &
+            BIND(C,NAME='H5Pset_link_creation_order')
+         IMPORT :: HID_T, C_INT
          IMPLICIT NONE
-         INTEGER(HID_T), INTENT(IN) :: gcpl_id
-         INTEGER, INTENT(IN) :: crt_order_flags
+         INTEGER(HID_T), VALUE :: gcpl_id
+         INTEGER(C_INT), VALUE :: crt_order_flags
 
-       END FUNCTION H5pset_link_creation_order_c
+       END FUNCTION H5pset_link_creation_order
     END INTERFACE
 
-    hdferr = h5pset_link_creation_order_c(gcpl_id, crt_order_flags)
+    hdferr = h5pset_link_creation_order(gcpl_id, INT(crt_order_flags, C_INT))
 
   END SUBROUTINE h5pset_link_creation_order_f
 
@@ -3634,18 +3634,21 @@ CONTAINS
     INTEGER(HID_T), INTENT(IN) :: gcpl_id
     INTEGER, INTENT(OUT) :: crt_order_flags
     INTEGER, INTENT(OUT) :: hdferr
-    INTERFACE
-       INTEGER FUNCTION h5pget_link_creation_order_c(gcpl_id, crt_order_flags) &
-            BIND(C,NAME='h5pget_link_creation_order_c')
-         IMPORT :: HID_T
-         IMPLICIT NONE
-         INTEGER(HID_T), INTENT(IN) :: gcpl_id
-         INTEGER, INTENT(OUT) :: crt_order_flags
 
-       END FUNCTION H5pget_link_creation_order_c
+    INTEGER(C_INT) :: c_crt_order_flags
+    INTERFACE
+       INTEGER FUNCTION h5pget_link_creation_order(gcpl_id, crt_order_flags) &
+            BIND(C,NAME='H5Pget_link_creation_order')
+         IMPORT :: HID_T, C_INT
+         IMPLICIT NONE
+         INTEGER(HID_T), VALUE :: gcpl_id
+         INTEGER(C_INT) :: crt_order_flags
+
+       END FUNCTION H5pget_link_creation_order
     END INTERFACE
 
-    hdferr = h5pget_link_creation_order_c(gcpl_id, crt_order_flags)
+    hdferr = h5pget_link_creation_order(gcpl_id, c_crt_order_flags)
+    crt_order_flags = INT(c_crt_order_flags)
 
   END SUBROUTINE h5pget_link_creation_order_f
 
@@ -4361,6 +4364,194 @@ SUBROUTINE h5pset_attr_phase_change_f(ocpl_id, max_compact, min_dense, hdferr)
     hdferr = h5pget_chunk_cache_c(dapl_id, rdcc_nslots, rdcc_nbytes, rdcc_w0)
 
   END SUBROUTINE h5pget_chunk_cache_f
+
+!>
+!! \ingroup FH5P
+!!
+!! \brief Retrieves the append flush property values from the dataset access property list.
+!!
+!! \param dapl_id  Dataset access property list identifier.
+!! \param ndims    Number of elements in boundary array (rank of dataset).
+!! \param boundary Dimension sizes used to determine the boundary (HSIZE_T array of size ndims).
+!! \param func     Retrieved user-defined callback function (TYPE(C_FUNPTR), optional).
+!! \param udata    Retrieved user-defined data for callback (TYPE(C_PTR), optional).
+!! \param hdferr   \fortran_error
+!!
+!! See C API: @ref H5Pget_append_flush()
+!!
+  SUBROUTINE h5pget_append_flush_f(dapl_id, ndims, boundary, hdferr, func, udata)
+    IMPLICIT NONE
+    INTEGER(HID_T), INTENT(IN) :: dapl_id
+    INTEGER, INTENT(IN) :: ndims
+    INTEGER(HSIZE_T), DIMENSION(ndims), INTENT(OUT) :: boundary
+    INTEGER, INTENT(OUT) :: hdferr
+    TYPE(C_FUNPTR), OPTIONAL, INTENT(OUT) :: func
+    TYPE(C_PTR), OPTIONAL, INTENT(OUT) :: udata
+
+    TYPE(C_FUNPTR) :: func_default
+    TYPE(C_PTR) :: udata_default
+
+    INTERFACE
+       INTEGER(C_INT) FUNCTION H5Pget_append_flush(dapl_id, ndims, boundary, func, udata) &
+            BIND(C,NAME='H5Pget_append_flush')
+         IMPORT :: C_INT, C_FUNPTR, C_PTR
+         IMPORT :: HID_T, HSIZE_T
+         IMPLICIT NONE
+         INTEGER(HID_T), VALUE :: dapl_id
+         INTEGER(C_INT), VALUE :: ndims
+         INTEGER(HSIZE_T), DIMENSION(*) :: boundary
+         TYPE(C_FUNPTR) :: func
+         TYPE(C_PTR) :: udata
+       END FUNCTION H5Pget_append_flush
+    END INTERFACE
+
+    hdferr = INT(H5Pget_append_flush(dapl_id, INT(ndims, C_INT), boundary, func_default, udata_default))
+
+    IF (PRESENT(func)) func = func_default
+    IF (PRESENT(udata)) udata = udata_default
+
+  END SUBROUTINE h5pget_append_flush_f
+
+!>
+!! \ingroup FH5P
+!!
+!! \brief Sets the append flush property values for a dataset access property list
+!!
+!! \param dapl_id    Dataset access property list identifier
+!! \param ndims      Number of elements in boundary array
+!! \param boundary   Array of dimension sizes for boundary
+!! \param hdferr     \fortran_error
+!! \param func       User-defined callback function
+!! \param udata      User-defined input data for callback
+!!
+!! See C API: @ref H5Pset_append_flush()
+!!
+  SUBROUTINE h5pset_append_flush_f(dapl_id, ndims, boundary, hdferr, func, udata)
+    IMPLICIT NONE
+    INTEGER(HID_T), INTENT(IN) :: dapl_id
+    INTEGER, INTENT(IN) :: ndims
+    INTEGER(HSIZE_T), DIMENSION(ndims), INTENT(IN) :: boundary
+    INTEGER, INTENT(OUT) :: hdferr
+    TYPE(C_FUNPTR), OPTIONAL, INTENT(IN) :: func
+    TYPE(C_PTR), OPTIONAL, INTENT(IN) :: udata
+
+    TYPE(C_FUNPTR) :: func_default
+    TYPE(C_PTR) :: udata_default
+
+    INTERFACE
+       INTEGER(C_INT) FUNCTION H5Pset_append_flush(dapl_id, ndims, boundary, func, udata) &
+            BIND(C,NAME='H5Pset_append_flush')
+         IMPORT :: C_INT, C_FUNPTR, C_PTR
+         IMPORT :: HID_T, HSIZE_T
+         IMPLICIT NONE
+         INTEGER(HID_T), VALUE :: dapl_id
+         INTEGER(C_INT), VALUE :: ndims
+         INTEGER(HSIZE_T), DIMENSION(*) :: boundary
+         TYPE(C_FUNPTR), VALUE :: func
+         TYPE(C_PTR), VALUE :: udata
+       END FUNCTION H5Pset_append_flush
+    END INTERFACE
+
+    ! Set defaults for optional parameters
+    func_default = C_NULL_FUNPTR
+    udata_default = C_NULL_PTR
+
+    IF (PRESENT(func)) func_default = func
+    IF (PRESENT(udata)) udata_default = udata
+
+    hdferr = INT(H5Pset_append_flush(dapl_id, INT(ndims, C_INT), boundary, func_default, udata_default))
+
+  END SUBROUTINE h5pset_append_flush_f
+
+!>
+!! \ingroup FH5P
+!!
+!! \brief Retrieves the flag for whether to use/not use a spatial tree
+!! during mapping operations on a Virtual Dataset. The default value is true.
+!!
+!! Use of a spatial tree will accelerate the process of searching through mappings
+!! to determine which contain intersections with the user's selection region.
+!! With the tree disabled, all mappings will simply be iterated through and
+!! checked directly.
+!!
+!! Certain workflows may find that tree creation overhead outweighs the time saved
+!! on reads. In this case, disabling this property will lead to a performance improvement,
+!! though it is expected that almost all cases will benefit from the tree on net.
+!!
+!! \param dapl_id  Target dataset access property list identifier.
+!! \param use_tree Value of the setting.
+!! \param hdferr   \fortran_error
+!!
+!! See C API: @ref H5Pget_virtual_spatial_tree()
+!!
+  SUBROUTINE h5pget_virtual_spatial_tree_f(dapl_id, use_tree, hdferr)
+    IMPLICIT NONE
+    INTEGER(HID_T) , INTENT(IN)              :: dapl_id
+    LOGICAL        , INTENT(OUT)             :: use_tree
+    INTEGER        , INTENT(OUT)             :: hdferr
+    LOGICAL(C_BOOL) :: c_use_tree
+
+    INTERFACE
+        INTEGER(C_INT) FUNCTION H5Pget_virtual_spatial_tree_c(dapl_id, use_tree) &
+             BIND(C, NAME='H5Pget_virtual_spatial_tree')
+          IMPORT :: C_INT, HID_T, C_BOOL
+          IMPLICIT NONE
+          INTEGER(HID_T), INTENT(IN), VALUE :: dapl_id
+          LOGICAL(C_BOOL), INTENT(OUT) :: use_tree
+        END FUNCTION H5Pget_virtual_spatial_tree_c
+    END INTERFACE
+
+    hdferr = INT(H5Pget_virtual_spatial_tree_c(dapl_id, c_use_tree))
+
+    ! Transfer value of C C_BOOL type to Fortran LOGICAL
+    use_tree = c_use_tree
+
+    END SUBROUTINE h5pget_virtual_spatial_tree_f
+
+!>
+!! \ingroup FH5P
+!!
+!! \brief Sets the dapl to use/not use a spatial tree
+!! during mapping operations on a Virtual Dataset. The default value is true.
+!!
+!! Use of a spatial tree will accelerate the process of searching through mappings
+!! to determine which contain intersections with the user's selection region.
+!! With the tree disabled, all mappings will simply be iterated through and
+!! checked directly.
+!!
+!! Certain workflows may find that tree creation overhead outweighs the time saved
+!! on reads. In this case, disabling this property will lead to a performance improvement,
+!! though it is expected that almost all cases will benefit from the tree on net.
+!!
+!! \param dapl_id  Target dataset access property list identifier.
+!! \param use_tree Value of the setting.
+!! \param hdferr   \fortran_error
+!!
+!! See C API: @ref H5Pset_virtual_spatial_tree()
+!!
+  SUBROUTINE h5pset_virtual_spatial_tree_f(dapl_id, use_tree, hdferr)
+    IMPLICIT NONE
+    INTEGER(HID_T) , INTENT(IN)              :: dapl_id
+    LOGICAL        , INTENT(IN)              :: use_tree
+    INTEGER        , INTENT(OUT)             :: hdferr
+    LOGICAL(C_BOOL) :: c_use_tree
+
+    INTERFACE
+        INTEGER FUNCTION h5pset_virtual_spatial_tree_c(dapl_id, use_tree) &
+             BIND(C, NAME='H5Pset_virtual_spatial_tree')
+          IMPORT :: HID_T, C_BOOL
+          IMPLICIT NONE
+          INTEGER(HID_T), INTENT(IN), VALUE :: dapl_id
+          LOGICAL(C_BOOL), INTENT(IN), VALUE :: use_tree
+        END FUNCTION h5pset_virtual_spatial_tree_c
+    END INTERFACE
+
+    ! Transfer value of Fortran LOGICAL to C C_BOOL type
+    c_use_tree = use_tree
+
+    hdferr = INT(h5pset_virtual_spatial_tree_c(dapl_id, c_use_tree))
+
+  END SUBROUTINE h5pset_virtual_spatial_tree_f
 
 #ifdef H5_DOXYGEN
 !>

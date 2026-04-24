@@ -1,5 +1,8 @@
 /** \page UG HDF5 User Guide
 
+Navigate back: \ref index "Main"
+<hr>
+
 \ref sec_data_model
 \li \ref subsec_data_model_intro
 \li \ref subsec_data_model_abstract
@@ -75,6 +78,7 @@
         <li> \ref subsubsec_file_alternate_drivers_family
         <li> \ref subsubsec_file_alternate_drivers_multi
         <li> \ref subsubsec_file_alternate_drivers_split
+        <li> \ref subsubsec_file_alternate_drivers_ros3
         <li> \ref subsubsec_file_alternate_drivers_par
     </ul>
 \li \ref subsec_file_examples
@@ -108,6 +112,15 @@
         <li> \ref subsubsec_group_program_all
     </ul>
 \li \ref subsec_group_examples
+
+\ref sec_link
+\li \ref subsec_link_intro
+\li \ref subsec_link_types
+\li \ref subsec_link_create
+\li \ref subsec_link_ops
+\li \ref subsec_link_traverse
+\li \ref subsec_link_user
+\li \ref subsec_link_summary
 
 \ref sec_dataset
 \li \ref subsec_dataset_intro
@@ -224,6 +237,25 @@
     </ul>
 \li \ref subsec_attribute_special
 
+\ref sec_object
+\li \ref subsec_object_intro
+\li \ref subsec_object_ops
+\li \ref subsec_object_visit
+\li \ref subsec_object_comments
+\li \ref subsec_object_refcount
+\li \ref subsec_object_cache
+\li \ref subsec_object_summary
+
+\ref sec_identifier
+\li \ref subsec_identifier_intro
+\li \ref subsec_identifier_types
+\li \ref subsec_identifier_refcount
+\li \ref subsec_identifier_valid
+\li \ref subsec_identifier_query
+\li \ref subsec_identifier_user
+\li \ref subsec_identifier_iteration
+\li \ref subsec_identifier_summary
+
 \ref sec_error
 \li \ref subsec_error_intro
 \li \ref subsec_error_program
@@ -261,6 +293,17 @@
 \li \ref subsec_plist_H5P
 \li \ref subsec_plist_resources
 \li \ref subsec_plist_notes
+
+\ref sec_vfd
+\li \ref subsec_vfd_intro
+\li \ref subsec_vfd_purpose
+\li \ref subsec_vfd_drivers
+\li \ref subsec_vfd_selection
+\li \ref subsec_vfd_custom
+\li \ref subsec_vfd_parallel
+\li \ref subsec_vfd_performance
+\li \ref subsec_vfd_query
+\li \ref subsec_vfd_summary
 
 \ref sec_vol
 \li \ref subsec_vol_intro
@@ -334,6 +377,24 @@
 \li \ref subsec_async_intro
 
 \ref sec_map
+\li \ref subsec_map_intro
+\li \ref subsec_map_lifecycle
+\li \ref subsec_map_plist
+\li \ref subsec_map_datatypes
+\li \ref subsec_map_example
+\li \ref subsec_map_notes
+
+\ref sec_reference
+
+\ref sec_filter
+\li \ref subsec_filter_intro
+\li \ref subsec_filter_builtin
+\li \ref subsec_filter_usage
+\li \ref subsec_filter_pipeline
+\li \ref subsec_filter_custom
+\li \ref subsec_filter_query
+\li \ref subsec_filter_plugins
+\li \ref subsec_filter_summary
 
 \section sec_hl HDF5 High Level APIs
 \li \ref H5DO_UG
@@ -352,7 +413,7 @@
 \li \ref H5TB_UG
 \li \ref H5PT_UG
 
-\ref sec_cltools
+\section sec_cltools Command Line Tools for HDF5 Files
 \li \ref H5TOOL_CP_UG
 \li \ref H5TOOL_DF_UG
 \li \ref H5TOOL_DP_UG
@@ -372,7 +433,13 @@
 
 \ref sec_addition
 
+<hr>
+Navigate back: \ref index "Main"
+
 \page AR_UG Additional Resources
+
+Navigate back: \ref index "Main" / \ref UG
+<hr>
 
 \section sec_addition Additional Resources
 These documents provide additional information for the use and tuning of specific HDF5 features.
@@ -484,12 +551,13 @@ These documents provide additional information for the use and tuning of specifi
 </tr>
  </table>
 
-Previous Chapter \ref sec_plist
-
 \par Don't like what you see? - You can help to improve this User Guide
      Complete the survey linked near the top of this page!\n
      We treat documentation like code: Fork the
      <a href="https://github.com/HDFGroup/hdf5">HDF5 repo</a>, make changes, and create a
      <a href="https://github.com/HDFGroup/hdf5/pulls">pull request</a> !\n
+
+<hr>
+Navigate back: \ref index "Main" / \ref UG
 
 */

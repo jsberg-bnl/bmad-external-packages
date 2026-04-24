@@ -14,7 +14,7 @@
 !                                                                             *
 !   This file is part of HDF5.  The full HDF5 copyright notice, including     *
 !   terms governing use, modification, and redistribution, is contained in    *
-!   the COPYING file, which can be found at the root of the source code       *
+!   the LICENSE file, which can be found at the root of the source code       *
 !   distribution tree, or in https://www.hdfgroup.org/licenses.               *
 !   If you do not have access to either file, you may request a copy from     *
 !   help@hdfgroup.org.                                                        *
@@ -2876,7 +2876,7 @@ SUBROUTINE setup_buffer(data_in, line_lengths, char_type)
 
   IMPLICIT NONE
 
-  ! Creates a simple "Data_in" consisting of the letters of the alphabet,
+  ! Create a simple "Data_in" consisting of the letters of the alphabet,
   ! one per line, with a control character.
 
   CHARACTER(len=10), DIMENSION(:) :: data_in

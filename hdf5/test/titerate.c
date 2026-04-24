@@ -4,7 +4,7 @@
  *                                                                           *
  * This file is part of HDF5.  The full HDF5 copyright notice, including     *
  * terms governing use, modification, and redistribution, is contained in    *
- * the COPYING file, which can be found at the root of the source code       *
+ * the LICENSE file, which can be found at the root of the source code       *
  * distribution tree, or in https://www.hdfgroup.org/licenses.               *
  * If you do not have access to either file, you may request a copy from     *
  * help@hdfgroup.org.                                                        *
@@ -38,6 +38,9 @@
 /* 1-D dataset with fixed dimensions */
 #define SPACE1_RANK 1
 #define SPACE1_DIM1 4
+
+/* Used by test_reference_obj() and test_reference_attr() */
+#define NON_NULL_BUF "NON_NULL_BUF"
 
 typedef enum { RET_ZERO, RET_TWO, RET_CHANGE, RET_CHANGE2 } iter_enum;
 
@@ -322,7 +325,12 @@ test_iter_group(hid_t fapl, bool new_format)
     i            = 0;
     idx          = 0;
     memset(info.name, 0, NAMELEN);
-    while ((ret = H5Literate2(file, H5_INDEX_NAME, H5_ITER_INC, &idx, liter_cb, &info)) > 0) {
+    H5E_BEGIN_TRY
+    {
+        ret = H5Literate2(file, H5_INDEX_NAME, H5_ITER_INC, &idx, liter_cb, &info);
+    }
+    H5E_END_TRY
+    while (ret > 0) {
         /* Verify return value from iterator gets propagated correctly */
         VERIFY(ret, 2, "H5Literate2");
 
@@ -341,7 +349,13 @@ test_iter_group(hid_t fapl, bool new_format)
             TestErrPrintf(
                 "Group iteration function didn't return name correctly for link - lnames[%u] = '%s'!\n",
                 (unsigned)(idx - 1), lnames[(size_t)(idx - 1)]);
-    } /* end while */
+
+        H5E_BEGIN_TRY
+        {
+            ret = H5Literate2(file, H5_INDEX_NAME, H5_ITER_INC, &idx, liter_cb, &info);
+        }
+        H5E_END_TRY
+    }
     VERIFY(ret, -1, "H5Literate2");
 
     if (i != (NDATASETS + 2))
@@ -354,7 +368,12 @@ test_iter_group(hid_t fapl, bool new_format)
     i            = 0;
     idx          = 0;
     memset(info.name, 0, NAMELEN);
-    while ((ret = H5Literate2(file, H5_INDEX_NAME, H5_ITER_INC, &idx, liter_cb, &info)) >= 0) {
+    H5E_BEGIN_TRY
+    {
+        ret = H5Literate2(file, H5_INDEX_NAME, H5_ITER_INC, &idx, liter_cb, &info);
+    }
+    H5E_END_TRY
+    while (ret >= 0) {
         /* Verify return value from iterator gets propagated correctly */
         VERIFY(ret, 1, "H5Literate2");
 
@@ -373,6 +392,12 @@ test_iter_group(hid_t fapl, bool new_format)
             TestErrPrintf(
                 "Group iteration function didn't return name correctly for link - lnames[%u] = '%s'!\n",
                 (unsigned)(idx - 1), lnames[(size_t)(idx - 1)]);
+
+        H5E_BEGIN_TRY
+        {
+            ret = H5Literate2(file, H5_INDEX_NAME, H5_ITER_INC, &idx, liter_cb, &info);
+        }
+        H5E_END_TRY
     } /* end while */
     VERIFY(ret, -1, "H5Literate2");
 
@@ -676,7 +701,7 @@ test_iter_group_large(hid_t fapl)
     } s1_t;
 
     /* Allocate & initialize array */
-    names = (iter_info *)calloc(sizeof(iter_info), (ITER_NGROUPS + 2));
+    names = (iter_info *)calloc((ITER_NGROUPS + 2), sizeof(iter_info));
     CHECK_PTR(names, "calloc");
 
     /* Output message about test being performed */
@@ -872,7 +897,9 @@ test_grp_memb_funcs(hid_t fapl)
     VERIFY(ginfo.nlinks, (NDATASETS + 2), "H5Gget_info");
 
     for (i = 0; i < (int)ginfo.nlinks; i++) {
-        H5O_info2_t oinfo; /* Object info */
+        H5O_info2_t oinfo;            /* Object info */
+        char        non_null_buf[80]; /* Buffer to test non-null buffer calls */
+        char       *buf_ptr;          /* To pass mid-string */
 
         /* Test with NULL for name, to query length */
         name_len = H5Lget_name_by_idx(root_group, ".", H5_INDEX_NAME, H5_ITER_INC, (hsize_t)i, NULL,
@@ -885,6 +912,15 @@ test_grp_memb_funcs(hid_t fapl)
 
         /* Double-check that the length is the same */
         VERIFY(ret, name_len, "H5Lget_name_by_idx");
+
+        /* Test with non-null buffer for name and 0 for size */
+        strcpy(non_null_buf, NON_NULL_BUF);
+        buf_ptr = &non_null_buf[4];
+        ret = (herr_t)H5Lget_name_by_idx(root_group, ".", H5_INDEX_NAME, H5_ITER_INC, (hsize_t)i, buf_ptr, 0,
+                                         H5P_DEFAULT);
+        CHECK(ret, FAIL, "H5Lget_name_by_idx");
+        VERIFY(ret, name_len, "H5Lget_name_by_idx");
+        VERIFY(strcmp(non_null_buf, NON_NULL_BUF), 0, "H5Lget_name_by_idx");
 
         /* Keep a copy of the dataset names around for later */
         obj_names[i] = strdup(dataset_name);
@@ -1221,7 +1257,7 @@ test_links_deprec(hid_t fapl)
 **
 ****************************************************************/
 void
-test_iterate(void)
+test_iterate(void H5_ATTR_UNUSED *params)
 {
     hid_t    fapl, fapl2; /* File access property lists */
     unsigned new_format;  /* Whether to use the new format or not */
@@ -1274,11 +1310,13 @@ test_iterate(void)
  *-------------------------------------------------------------------------
  */
 void
-cleanup_iterate(void)
+cleanup_iterate(void H5_ATTR_UNUSED *params)
 {
-    H5E_BEGIN_TRY
-    {
-        H5Fdelete(DATAFILE, H5P_DEFAULT);
+    if (GetTestCleanup()) {
+        H5E_BEGIN_TRY
+        {
+            H5Fdelete(DATAFILE, H5P_DEFAULT);
+        }
+        H5E_END_TRY
     }
-    H5E_END_TRY
 }

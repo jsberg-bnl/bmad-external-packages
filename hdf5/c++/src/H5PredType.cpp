@@ -4,7 +4,7 @@
  *                                                                           *
  * This file is part of HDF5.  The full HDF5 copyright notice, including     *
  * terms governing use, modification, and redistribution, is contained in    *
- * the COPYING file, which can be found at the root of the source code       *
+ * the LICENSE file, which can be found at the root of the source code       *
  * distribution tree, or in https://www.hdfgroup.org/licenses.               *
  * If you do not have access to either file, you may request a copy from     *
  * help@hdfgroup.org.                                                        *
@@ -151,6 +151,14 @@ PredType *PredType::IEEE_F32BE_;
 PredType *PredType::IEEE_F32LE_;
 PredType *PredType::IEEE_F64BE_;
 PredType *PredType::IEEE_F64LE_;
+
+PredType *PredType::FLOAT_BFLOAT16BE_;
+PredType *PredType::FLOAT_BFLOAT16LE_;
+PredType *PredType::FLOAT_F8E4M3_;
+PredType *PredType::FLOAT_F8E5M2_;
+PredType *PredType::FLOAT_F6E2M3_;
+PredType *PredType::FLOAT_F6E3M2_;
+PredType *PredType::FLOAT_F4E2M1_;
 
 PredType *PredType::UNIX_D32BE_;
 PredType *PredType::UNIX_D32LE_;
@@ -339,6 +347,14 @@ PredType::makePredTypes()
     IEEE_F64BE_ = new PredType(H5T_IEEE_F64BE);
     IEEE_F64LE_ = new PredType(H5T_IEEE_F64LE);
 
+    FLOAT_BFLOAT16BE_ = new PredType(H5T_FLOAT_BFLOAT16BE);
+    FLOAT_BFLOAT16LE_ = new PredType(H5T_FLOAT_BFLOAT16LE);
+    FLOAT_F8E4M3_     = new PredType(H5T_FLOAT_F8E4M3);
+    FLOAT_F8E5M2_     = new PredType(H5T_FLOAT_F8E5M2);
+    FLOAT_F6E2M3_     = new PredType(H5T_FLOAT_F6E2M3);
+    FLOAT_F6E3M2_     = new PredType(H5T_FLOAT_F6E3M2);
+    FLOAT_F4E2M1_     = new PredType(H5T_FLOAT_F4E2M1);
+
     UNIX_D32BE_ = new PredType(H5T_UNIX_D32BE);
     UNIX_D32LE_ = new PredType(H5T_UNIX_D32LE);
     UNIX_D64BE_ = new PredType(H5T_UNIX_D64BE);
@@ -491,6 +507,14 @@ PredType::deleteConstants()
     delete IEEE_F32LE_;
     delete IEEE_F64BE_;
     delete IEEE_F64LE_;
+
+    delete FLOAT_BFLOAT16BE_;
+    delete FLOAT_BFLOAT16LE_;
+    delete FLOAT_F8E4M3_;
+    delete FLOAT_F8E5M2_;
+    delete FLOAT_F6E2M3_;
+    delete FLOAT_F6E3M2_;
+    delete FLOAT_F4E2M1_;
 
     delete UNIX_D32BE_;
     delete UNIX_D32LE_;
@@ -648,6 +672,14 @@ const PredType &PredType::IEEE_F32BE = *IEEE_F32BE_;
 const PredType &PredType::IEEE_F32LE = *IEEE_F32LE_;
 const PredType &PredType::IEEE_F64BE = *IEEE_F64BE_;
 const PredType &PredType::IEEE_F64LE = *IEEE_F64LE_;
+
+const PredType &PredType::FLOAT_BFLOAT16BE = *FLOAT_BFLOAT16BE_;
+const PredType &PredType::FLOAT_BFLOAT16LE = *FLOAT_BFLOAT16LE_;
+const PredType &PredType::FLOAT_F8E4M3     = *FLOAT_F8E4M3_;
+const PredType &PredType::FLOAT_F8E5M2     = *FLOAT_F8E5M2_;
+const PredType &PredType::FLOAT_F6E2M3     = *FLOAT_F6E2M3_;
+const PredType &PredType::FLOAT_F6E3M2     = *FLOAT_F6E3M2_;
+const PredType &PredType::FLOAT_F4E2M1     = *FLOAT_F4E2M1_;
 
 const PredType &PredType::UNIX_D32BE = *UNIX_D32BE_;
 const PredType &PredType::UNIX_D32LE = *UNIX_D32LE_;

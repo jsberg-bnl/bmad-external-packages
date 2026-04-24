@@ -16,7 +16,7 @@
 !                                                                             *
 !   This file is part of HDF5.  The full HDF5 copyright notice, including     *
 !   terms governing use, modification, and redistribution, is contained in    *
-!   the COPYING file, which can be found at the root of the source code       *
+!   the LICENSE file, which can be found at the root of the source code       *
 !   distribution tree, or in https://www.hdfgroup.org/licenses.               *
 !   If you do not have access to either file, you may request a copy from     *
 !   help@hdfgroup.org.                                                        *
@@ -253,6 +253,33 @@ CONTAINS
     hdferr = H5Fflush(object_id, INT(scope, C_INT))
 
   END SUBROUTINE h5fflush_f
+!>
+!! \ingroup FH5F
+!!
+!! \brief Enables SWMR writing mode for a file.
+!!
+!! \param file_id File identifier.
+!! \param hdferr  \fortran_error
+!!
+!! See C API: @ref H5Fstart_swmr_write()
+!!
+  SUBROUTINE h5fstart_swmr_write_f(file_id, hdferr)
+    IMPLICIT NONE
+    INTEGER(HID_T), INTENT(IN) :: file_id
+    INTEGER, INTENT(OUT) :: hdferr
+
+    INTERFACE
+       INTEGER(C_INT) FUNCTION H5Fstart_swmr_write(file_id) BIND(C,NAME='H5Fstart_swmr_write')
+         IMPORT :: C_INT
+         IMPORT :: HID_T
+         IMPLICIT NONE
+         INTEGER(HID_T), VALUE :: file_id
+       END FUNCTION H5Fstart_swmr_write
+    END INTERFACE
+
+    hdferr = INT(H5Fstart_swmr_write(file_id))
+
+  END SUBROUTINE h5fstart_swmr_write_f
 !>
 !! \ingroup FH5F
 !!

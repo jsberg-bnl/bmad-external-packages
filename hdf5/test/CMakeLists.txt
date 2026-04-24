@@ -1,4 +1,10 @@
-cmake_minimum_required (VERSION 3.18)
+#-----------------------------------------------------------------------------
+# CMake configuration for HDF5 test library and test executables
+# This file sets up the build, formatting, and installation rules for the HDF5 test library (static/shared),
+# test plugins, and all test executables. It handles source/header definitions, compiler options, linking,
+# export, and test configuration for the HDF5 test suite, including plugin, VFD, VOL, SWMR, and use case tests.
+#-----------------------------------------------------------------------------
+cmake_minimum_required (VERSION 3.26)
 project (HDF5_TEST C)
 
 #-----------------------------------------------------------------------------
@@ -40,7 +46,7 @@ if (BUILD_STATIC_LIBS)
   add_library (${HDF5_TEST_LIB_TARGET} STATIC ${TEST_LIB_SOURCES} ${TEST_LIB_HEADERS})
   target_include_directories (${HDF5_TEST_LIB_TARGET}
       PRIVATE "${HDF5_SRC_INCLUDE_DIRS};${HDF5_SRC_BINARY_DIR};${HDF5_TEST_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>"
-      INTERFACE "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>"
+      INTERFACE "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${HDF5_INSTALL_INCLUDE_DIR}>"
   )
   target_compile_options(${HDF5_TEST_LIB_TARGET} PRIVATE "${HDF5_CMAKE_C_FLAGS}")
   target_compile_definitions(${HDF5_TEST_LIB_TARGET}
@@ -78,7 +84,7 @@ if (BUILD_SHARED_LIBS)
   add_library (${HDF5_TEST_LIBSH_TARGET} SHARED ${TEST_LIB_SOURCES} ${TEST_LIB_HEADERS})
   target_include_directories (${HDF5_TEST_LIBSH_TARGET}
       PRIVATE "${HDF5_SRC_INCLUDE_DIRS};${HDF5_SRC_BINARY_DIR};${HDF5_TEST_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>"
-      INTERFACE "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>"
+      INTERFACE "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${HDF5_INSTALL_INCLUDE_DIR}>"
   )
   target_compile_options(${HDF5_TEST_LIBSH_TARGET} PRIVATE "${HDF5_CMAKE_C_FLAGS}")
   target_compile_definitions(${HDF5_TEST_LIBSH_TARGET}
@@ -343,11 +349,19 @@ set(mirror_vfd_SOURCES
 set (ttsafe_SOURCES
     ${HDF5_TEST_SOURCE_DIR}/ttsafe.h
     ${HDF5_TEST_SOURCE_DIR}/ttsafe.c
-    ${HDF5_TEST_SOURCE_DIR}/ttsafe_dcreate.c
-    ${HDF5_TEST_SOURCE_DIR}/ttsafe_error.c
-    ${HDF5_TEST_SOURCE_DIR}/ttsafe_cancel.c
     ${HDF5_TEST_SOURCE_DIR}/ttsafe_acreate.c
+    ${HDF5_TEST_SOURCE_DIR}/ttsafe_atomic.c
     ${HDF5_TEST_SOURCE_DIR}/ttsafe_attr_vlen.c
+    ${HDF5_TEST_SOURCE_DIR}/ttsafe_cancel.c
+    ${HDF5_TEST_SOURCE_DIR}/ttsafe_dcreate.c
+    ${HDF5_TEST_SOURCE_DIR}/ttsafe_develop.c
+    ${HDF5_TEST_SOURCE_DIR}/ttsafe_error.c
+    ${HDF5_TEST_SOURCE_DIR}/ttsafe_rwlock.c
+    ${HDF5_TEST_SOURCE_DIR}/ttsafe_rec_rwlock.c
+    ${HDF5_TEST_SOURCE_DIR}/ttsafe_semaphore.c
+    ${HDF5_TEST_SOURCE_DIR}/ttsafe_thread_id.c
+    ${HDF5_TEST_SOURCE_DIR}/ttsafe_thread_pool.c
+    ${HDF5_TEST_SOURCE_DIR}/ttsafe_error_stacks.c
 )
 
 set (H5_EXPRESS_TESTS
@@ -358,8 +372,10 @@ set (H5_EXPRESS_TESTS
     farray
     earray
     fheap
+    rtree
     objcopy_ref
     objcopy
+    io_perf
 )
 
 set (H5_TESTS
@@ -405,8 +421,6 @@ set (H5_TESTS
     enc_dec_plist_cross_platform
     getname
     vfd
-    ros3
-    s3comms
     hdfs
     #mirror_vfd # multiple source
     ntypes
@@ -423,13 +437,18 @@ set (H5_TESTS
     cache_logging
     cork
     swmr
-    thread_id # special link
     vol
     timer
     cmpd_dtransform
     event_set
     onion
 )
+
+set (H5_S3TESTS
+    ros3
+    s3comms
+)
+
 if (HDF5_BUILD_UTILS)
   set (H5_TESTS ${H5_TESTS} mirror_vfd)
 endif ()
@@ -462,11 +481,10 @@ set (H5_TESTS_MULTIPLE
     testhdf5
     cache_image
     ttsafe
-    thread_id # special link
     mirror_vfd
 )
 # Only build single source tests here
-foreach (h5_test ${H5_TESTS} ${H5_EXPRESS_TESTS})
+foreach (h5_test ${H5_TESTS} ${H5_EXPRESS_TESTS} ${H5_S3TESTS})
   if (NOT h5_test IN_LIST H5_TESTS_MULTIPLE)
     ADD_H5_EXE(${h5_test})
   endif ()
@@ -593,31 +611,6 @@ set_target_properties (ttsafe PROPERTIES FOLDER test)
 #-----------------------------------------------------------------------------
 if (HDF5_ENABLE_FORMATTERS)
   clang_format (HDF5_TEST_ttsafe_FORMAT ttsafe)
-endif ()
-
-######### Special handling for extra link lib of threads #############
-#-- Adding test for thread_id
-add_executable (thread_id ${HDF5_TEST_SOURCE_DIR}/thread_id.c)
-target_compile_options(thread_id PRIVATE "${HDF5_CMAKE_C_FLAGS}")
-target_compile_definitions(thread_id PRIVATE "${HDF5_TEST_COMPILE_DEFS_PRIVATE}")
-target_include_directories (thread_id PRIVATE "${HDF5_SRC_INCLUDE_DIRS};${HDF5_SRC_BINARY_DIR};$<$<BOOL:${HDF5_ENABLE_PARALLEL}>:${MPI_C_INCLUDE_DIRS}>")
-if (NOT BUILD_SHARED_LIBS)
-  TARGET_C_PROPERTIES (thread_id STATIC)
-  target_link_libraries (thread_id PRIVATE ${HDF5_TEST_LIB_TARGET})
-  if (NOT WIN32)
-    target_link_libraries (thread_id PRIVATE "$<$<BOOL:${HDF5_ENABLE_THREADSAFE}>:Threads::Threads>")
-  endif ()
-else ()
-  TARGET_C_PROPERTIES (thread_id SHARED)
-  target_link_libraries (thread_id PRIVATE ${HDF5_TEST_LIBSH_TARGET} "$<$<BOOL:${HDF5_ENABLE_THREADSAFE}>:Threads::Threads>")
-endif ()
-set_target_properties (thread_id PROPERTIES FOLDER test)
-
-#-----------------------------------------------------------------------------
-# Add Target to clang-format
-#-----------------------------------------------------------------------------
-if (HDF5_ENABLE_FORMATTERS)
-  clang_format (HDF5_TEST_thread_id_FORMAT thread_id)
 endif ()
 
 if (HDF5_BUILD_UTILS) # requires mirror server

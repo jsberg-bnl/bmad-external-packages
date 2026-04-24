@@ -4,7 +4,7 @@
  *                                                                           *
  * This file is part of HDF5.  The full HDF5 copyright notice, including     *
  * terms governing use, modification, and redistribution, is contained in    *
- * the COPYING file, which can be found at the root of the source code       *
+ * the LICENSE file, which can be found at the root of the source code       *
  * distribution tree, or in https://www.hdfgroup.org/licenses.               *
  * If you do not have access to either file, you may request a copy from     *
  * help@hdfgroup.org.                                                        *
@@ -74,7 +74,6 @@ CompType::CompType(size_t size) : DataType(H5T_COMPOUND, size)
 // Function:    CompType overloaded constructor
 ///\brief       Gets the compound datatype of the specified dataset.
 ///\param       dataset - IN: Dataset that this enum datatype associates with
-///\return      CompType instance
 ///\exception   H5::DataTypeIException
 //--------------------------------------------------------------------------
 CompType::CompType(const DataSet &dataset) : DataType()
